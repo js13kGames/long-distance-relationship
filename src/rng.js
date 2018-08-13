@@ -3,7 +3,7 @@ module.exports = function(seed) {
     var x = Math.sin(.8765111159592828 + seed++) * 1e4
     return x - Math.floor(x)
   }
-  
+
   var rng = {
     /**
      * Return an integer within [0, max).
