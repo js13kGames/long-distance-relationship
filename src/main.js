@@ -1,52 +1,37 @@
-var raf = require('./raf');
-var rng = require('./rng');
+var raf = require('./raf')
+// var rng = require('./rng')
+var mapGen = require('./map')
+var heroGen = require('./hero')
+var inputs = require('./inputs')
 
-var canvas = document.querySelector('#game');
-var ctx = canvas.getContext('2d');
+var canvas = document.querySelector('#game')
+var ctx = canvas.getContext('2d')
 
-var seed = 1;
-var rand = rng(seed);
+var config = {width: canvas.width, height: canvas.height}
 
-var balls = [];
-var colors = [
-  '#7FDBFF', '#0074D9', '#01FF70', '#001F3F', '#39CCCC',
-  '#3D9970', '#2ECC40', '#FF4136', '#85144B', '#FF851B',
-  '#B10DC9', '#FFDC00', '#F012BE',
-];
+// var rand = rng(1)
+var map = mapGen(ctx, config)
+var keys = inputs()
+var hero = heroGen(ctx, config, keys)
+var map1 = map.generate(64, 48)
+// var map1 = map.homeMap
 
-for (var i = 0; i < 50; i++) {
-  balls.push({
-    x: rand.int(canvas.width),
-    y: rand.int(canvas.height / 2),
-    radius: rand.range(15, 35),
-    dx: rand.range(-100, 100),
-    dy: 0,
-    color: rand.pick(colors)
-  });
-}
+// var map1 = [
+//   [1, 0, 0, 0, 0, 0, 1],
+//   [1, 0, 0, 0, 0, 0, 1],
+//   [1, 0, 0, 0, 0, 0, 1],
+//   [1, 0, 0, 0, 0, 0, 1],
+//   [1, 0, 0, 0, 0, 0, 1],
+//   [1, 0, 1, 1, 0, 0, 1],
+//   [1, 0, 0, 0, 0, 0, 1],
+//   [1, 0, 0, 0, 0, 0, 1],
+//   [1, 1, 1, 1, 1, 1, 1],
+// ]
 
 raf.start(function(elapsed) {
   // Clear the screen
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Update each balls
-  balls.forEach(function(ball) {
-    // Gravity
-    ball.dy += elapsed * 1500;
-
-    // Handle collision against the canvas's edges
-    if (ball.x - ball.radius < 0 && ball.dx < 0 || ball.x + ball.radius > canvas.width && ball.dx > 0) ball.dx = -ball.dx * 0.7;
-    if (ball.y - ball.radius < 0 && ball.dy < 0 || ball.y + ball.radius > canvas.height && ball.dy > 0) ball.dy = -ball.dy * 0.7;
-
-    // Update ball position
-    ball.x += ball.dx * elapsed;
-    ball.y += ball.dy * elapsed;
-
-    // Render the ball
-    ctx.beginPath();
-    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2, true);
-    ctx.closePath();
-    ctx.fillStyle = ball.color;
-    ctx.fill();
-  });
+  hero.move(map1);
+  map.draw(map1);
+  hero.draw(map1);
 });
