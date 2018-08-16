@@ -13,7 +13,7 @@ var config = {width: canvas.width, height: canvas.height}
 var map = mapGen(ctx, config)
 var keys = inputs()
 var hero = heroGen(ctx, config, keys)
-var map1 = map.generate(64, 48)
+var map1 = map.generate(128, 96, 0.4)
 // var map1 = map.homeMap
 
 // var map1 = [
