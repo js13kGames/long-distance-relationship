@@ -6,6 +6,12 @@ module.exports = function(ctx, config) {
     },
     0: {
       color: '#fff'
+    },
+    2: {
+      color: '#dddd0d'
+    },
+    3: {
+      color: '#d30000'
     }
   }
 
@@ -40,6 +46,14 @@ module.exports = function(ctx, config) {
         result[k][0] = 0
       } else {
         result[k][width - 1] = 0
+      }
+    }
+
+    // add bar
+    for (var l = Math.floor(width / 2); l < width; l++) {
+      var midHeight = Math.floor(height/2);
+      for (var m = -1; m <= 1; m++) {
+        result[midHeight + m][l] = 1;
       }
     }
 
@@ -83,6 +97,15 @@ module.exports = function(ctx, config) {
     return newMap
   }
 
+function _addTreasure(map) {
+  var randHeight, randWidth
+  do {
+    randHeight = Math.floor(Math.random() * map.length)
+    randWidth = Math.floor(Math.random() * map[0].length)
+  } while (map[randHeight][randWidth] !== 0)
+  map[randHeight][randWidth] = 3
+}
+
   return {
 
     homeMap: _homeMap,
@@ -112,9 +135,13 @@ module.exports = function(ctx, config) {
       })
     },
 
-    generate: function (width, height, emptyPercentage) {
-      var baseMap = _basicMap(width, height, emptyPercentage)
-      return _doSimulationStep(_doSimulationStep(baseMap, 2, 3),2,3)
+    generate: function (width, height) {
+      var map = _basicMap(width, height, 0.43)
+      for (var i = 0; i < 10; i++) {
+        map = _doSimulationStep(map, 4, 4)
+      }
+      _addTreasure(map)
+      return map
     }
   }
 }

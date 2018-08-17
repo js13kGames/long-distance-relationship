@@ -1,6 +1,6 @@
 var defaultInit = {
-  posX: 512,
-  posY: 0
+  posX: 4,
+  posY: 384
 }
 
 module.exports = function (ctx, config, keys, init) {
@@ -35,7 +35,7 @@ module.exports = function (ctx, config, keys, init) {
 
       // jump
       if (keys.up && hero.accY === 0) {
-        hero.speedY = -10
+        hero.speedY = -8
         hero.accY = gravity
       }
 
@@ -58,30 +58,34 @@ module.exports = function (ctx, config, keys, init) {
       hero.top = [tempPosX, (tempPosY - blockHeight) + offset]
 
       // colliding blocks indexes
-      var left = [getBlockIndex(hero.left[0], config.width, numBlocksX), getBlockIndex(hero.left[1], config.height, numBlocksY)]
-      var right = [getBlockIndex(hero.right[0], config.width, numBlocksX), getBlockIndex(hero.right[1], config.height, numBlocksY)]
-      var top = [getBlockIndex(hero.top[0], config.width, numBlocksX), getBlockIndex(hero.top[1], config.height, numBlocksY)]
-      var bottom = [getBlockIndex(hero.bottom[0], config.width, numBlocksX), getBlockIndex(hero.bottom[1], config.height, numBlocksY)]
+      hero.leftBlock = [getBlockIndex(hero.left[0], config.width, numBlocksX), getBlockIndex(hero.left[1], config.height, numBlocksY)]
+      hero.rightBlock = [getBlockIndex(hero.right[0], config.width, numBlocksX), getBlockIndex(hero.right[1], config.height, numBlocksY)]
+      hero.topBlock = [getBlockIndex(hero.top[0], config.width, numBlocksX), getBlockIndex(hero.top[1], config.height, numBlocksY)]
+      hero.bottomBlock = [getBlockIndex(hero.bottom[0], config.width, numBlocksX), getBlockIndex(hero.bottom[1], config.height, numBlocksY)]
 
-      if (map[left[1]][left[0]] === 1 && hero.speedX < 0) {
-        tempPosX = (left[0] + 1.5) * blockWidth
+      if (map[hero.leftBlock[1]][hero.leftBlock[0]] > 0 && hero.speedX < 0) {
+        if (map[hero.leftBlock[1]][hero.leftBlock[0]] === 3) console.log('win')
+        tempPosX = (hero.leftBlock[0] + 1.5) * blockWidth
         hero.speedX = 0
         hero.accX = 0
       }
-      if (map[right[1]][right[0]] === 1 && hero.speedX > 0) {
-        tempPosX = (right[0] - 0.5) * blockWidth
+      if (map[hero.rightBlock[1]][hero.rightBlock[0]] > 0 && hero.speedX > 0) {
+        if (map[hero.rightBlock[1]][hero.rightBlock[0]] === 3) console.log('win')
+        tempPosX = (hero.rightBlock[0] - 0.5) * blockWidth
         hero.speedX = 0
         hero.accX = 0
       }
-      if ((map[top[1]][top[0]] === 1 && hero.speedY < 0)) {
-        tempPosY = (top[1] + 2) * blockHeight
+      if ((map[hero.topBlock[1]][hero.topBlock[0]] > 0 && hero.speedY < 0)) {
+        if (map[hero.topBlock[1]][hero.topBlock[0]] === 3) console.log('win')
+        tempPosY = (hero.topBlock[1] + 2) * blockHeight
         hero.speedY = 0
       }
-      if (map[bottom[1]][bottom[0]] === 1 && hero.speedY > 0) {
-        tempPosY = (bottom[1] - 1) * blockHeight
+      if (map[hero.bottomBlock[1]][hero.bottomBlock[0]] > 0 && hero.speedY > 0) {
+        if (map[hero.bottomBlock[1]][hero.bottomBlock[0]] === 3) console.log('win')
+        tempPosY = (hero.bottomBlock[1] - 1) * blockHeight
         hero.speedY = 0
         hero.accY = 0
-      } else if (map[bottom[1]][bottom[0]] === 0) {
+      } else if (map[hero.bottomBlock[1]][hero.bottomBlock[0]] === 0) {
         hero.accY = gravity
       }
 
@@ -107,6 +111,31 @@ module.exports = function (ctx, config, keys, init) {
       // ctx.fillRect(hero.right[0]-1, hero.right[1]-1, 2, 2)
       // ctx.fillRect(hero.top[0]-1, hero.top[1]-1, 2, 2)
       // ctx.fillRect(hero.bottom[0]-1, hero.bottom[1]-1, 2, 2)
+    },
+
+    placeBlock: function (map, direction) {
+      switch (direction) {
+        case 'left':
+          if (map[hero.leftBlock[1]][hero.leftBlock[0]] === 0) {
+            map[hero.leftBlock[1]][hero.leftBlock[0]] = 2
+          }
+          break
+        case 'right':
+          if (map[hero.rightBlock[1]][hero.rightBlock[0]] === 0) {
+            map[hero.rightBlock[1]][hero.rightBlock[0]] = 2
+          }
+          break
+        case 'up':
+          if (map[hero.topBlock[1] - 1][hero.topBlock[0]] === 0) {
+            map[hero.topBlock[1] - 1][hero.topBlock[0]] = 2
+          }
+          break
+        case 'down':
+        if (map[hero.bottomBlock[1] - 1][hero.bottomBlock[0]] === 0) {
+          map[hero.bottomBlock[1] - 1][hero.bottomBlock[0]] = 2
+        }
+        break
+      }
     }
   }
 
