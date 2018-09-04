@@ -225,6 +225,39 @@ module.exports = function (ctx, config, keys, init) {
           }
           break
       }
+    },
+
+    pickupBlock: function (map, direction) {
+      var numBlocksX = map[0].length
+      var numBlocksY = map.length
+      var heroBlock = [
+        getBlockIndex(hero.posX, config.width, numBlocksX),
+        getBlockIndex(hero.posY, config.height, numBlocksY)
+      ]
+
+      switch (direction) {
+        case 'left':
+          if (map[heroBlock[1]][heroBlock[0] - 1] === 2) {
+            map[heroBlock[1]][heroBlock[0] - 1] = 0
+          }
+          break
+        case 'right':
+          if (map[heroBlock[1]][heroBlock[0] + 1] === 2) {
+            map[heroBlock[1]][heroBlock[0] + 1] = 0
+          }
+          break
+        case 'up':
+          if (map[heroBlock[1] - 1][heroBlock[0]] === 2) {
+            map[heroBlock[1] - 1][heroBlock[0]] = 0
+          }
+          break
+        case 'down':
+          if (map[heroBlock[1] + 1][heroBlock[0]] === 2) {
+            map[heroBlock[1] + 1][heroBlock[0]] = 0
+            hero.accY = gravity
+          }
+          break
+      }
     }
   }
 

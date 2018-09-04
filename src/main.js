@@ -10,12 +10,16 @@ var config = {width: canvas.width, height: canvas.height}
 
 var hero, map, keys, currMap
 
-function blockCallback(direction) {
+function blockPlaceCallback (direction) {
   hero.placeBlock(currMap, direction)
 }
 
+function blockPickupCallback (direction) {
+  hero.pickupBlock(currMap, direction)
+}
+
 map = mapGen(ctx, config)
-keys = inputs(blockCallback)
+keys = inputs(blockPlaceCallback, blockPickupCallback)
 hero = heroGen(ctx, config, keys)
 
 currMap = map.generate(128, 96)
