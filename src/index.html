@@ -7,6 +7,33 @@
     <link rel="stylesheet" href="build.css"/>
   </head>
   <body>
+    <div class="game-info">
+      <div class="stats">
+        <div class="blocks">
+          <span>
+            repair blocks
+            <strong id="rep-blocks">0</strong>
+          </span>
+          <span>
+            build blocks
+            <strong id="build-blocks">0</strong>
+          </span>
+        </div>
+        <div class="bars">
+          <span>
+            connection health
+            <progress id="health" class="good" value="100" max="100"></progress>
+          </span>
+          <span>
+            stamina
+            <progress id="stamina" class="good" value="100" max="100"></progress>
+          </span>
+        </div>
+      </div>
+      <div class="day-night">
+        <progress id="day-night" value="0" max="100"></progress>
+      </div>
+    </div>
     <canvas id="game" width="1024" height="768"></canvas>
     <script src="build.js"></script>
   </body>

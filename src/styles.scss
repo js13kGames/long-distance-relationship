@@ -1,6 +1,38 @@
 #game {
-  margin: 50px auto 0;
+  margin: 10px auto 0;
   display: block;
   border: 3px solid #555;
   border-radius: 3px;
+}
+
+.game-info {
+  width: 1024px;
+  margin: auto;
+
+  .day-night {
+    width: 100%;
+
+    progress {
+      width: 100%;
+    }
+  }
+
+  .stats {
+    display: flex;
+    justify-content: space-between;
+
+    & > * {
+      display: flex;
+      flex-direction: column;
+
+      progress {
+        width: 400px
+      }
+    }
+
+    span {
+      text-align: right;
+    }
+  }
+
 }
