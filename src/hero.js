@@ -16,8 +16,8 @@ v
 
 ***************************************************************************** */
 
-module.exports = function (ctx, config, keys, init) {
-  init = init || {
+module.exports = function (ctx, config, keys, gameState, updateMap) {
+  var init = {
     posX: 500,
     posY: 200
   }
@@ -172,6 +172,47 @@ module.exports = function (ctx, config, keys, init) {
         }
 
         speedY -= step
+      }
+
+      // canvas border collision
+      if (gameState.currentMapStack.length === 0) {
+        if (hero.posX < 0) {
+          gameState.currentMapStack.push(0)
+          hero.posX = config.width - hero.blockWidth
+          hero.posY = config.height / 2
+          updateMap()
+        } else if (hero.posX > config.width) {
+          gameState.currentMapStack.push(1)
+          hero.posX = hero.blockWidth
+          hero.posY = config.height / 2
+          updateMap()
+        }
+      } else {
+        if (gameState.currentMapStack[0] === 0) {
+          if (hero.posX < 0) {
+            gameState.currentMapStack.push(hero.posY < config.height / 2? 0: 1)
+            hero.posX = config.width - hero.blockWidth
+            hero.posY = config.height / 2
+            updateMap()
+          } else if (hero.posX > config.width) {
+            var comingFrom = gameState.currentMapStack.pop()
+            hero.posX = hero.blockWidth
+            hero.posY = (0.5 * comingFrom + 0.25) * config.height
+            updateMap()
+          }
+        } else {
+          if (hero.posX < 0) {
+            comingFrom = gameState.currentMapStack.pop()
+            hero.posX = config.width - hero.blockWidth
+            hero.posY = (0.5 * comingFrom + 0.25) * config.height
+            updateMap()
+          } else if (hero.posX > config.width) {
+            gameState.currentMapStack.push(hero.posY < config.height / 2? 0: 1)
+            hero.posX = hero.blockWidth
+            hero.posY = config.height / 2
+            updateMap()
+          }
+        }
       }
 
       hero.speedX += hero.accX

@@ -24,7 +24,7 @@ module.exports = function(ctx, config) {
     _homeMap.push(row)
   }
 
-  function _basicMap (width, height, emptyPercentage) {
+  function _basicMap (width, height, emptyPercentage, flipped) {
     var entranceHeight = Math.floor(height / 5)
     var result = []
 
@@ -43,14 +43,18 @@ module.exports = function(ctx, config) {
     // add endtrances
     for (var k = entranceHeight; k <= entranceHeight * 4; k++) {
       if (k > entranceHeight * 2 && k <= entranceHeight * 3) {
-        result[k][0] = 0
+        result[k][flipped? width - 1: 0] = 0
       } else {
-        result[k][width - 1] = 0
+        result[k][flipped? 0: width - 1] = 0
       }
     }
 
     // add bar
-    for (var l = Math.floor(width / 2); l < width; l++) {
+    for (
+      var l = flipped? 0: Math.floor(width / 2);
+      l < (flipped? Math.floor(width / 2): width);
+      l++
+    ) {
       var midHeight = Math.floor(height/2);
       for (var m = -1; m <= 1; m++) {
         result[midHeight + m][l] = 1;
@@ -135,8 +139,8 @@ function _addTreasure(map) {
       })
     },
 
-    generate: function (width, height) {
-      var map = _basicMap(width, height, 0.43)
+    generate: function (width, height, flipped) {
+      var map = _basicMap(width, height, 0.43, flipped)
       for (var i = 0; i < 10; i++) {
         map = _doSimulationStep(map, 4, 4)
       }
