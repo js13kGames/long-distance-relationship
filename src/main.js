@@ -32,7 +32,7 @@ currMap = map.generate(128, 96)
 //   [1, 1, 1, 1, 1, 1, 1],
 // ]
 
-raf.start(function(elapsed) {
+raf.start(function() {
   // Clear the screen
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   hero.move(currMap);

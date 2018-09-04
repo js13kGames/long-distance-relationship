@@ -20,6 +20,7 @@ var zip = require('gulp-zip');
 var source = require('vinyl-source-stream');
 
 program.on('--help', function(){
+  /* eslint-disable */
   console.log('  Tasks:');
   console.log();
   console.log('    build       build the game');
@@ -28,6 +29,7 @@ program.on('--help', function(){
   console.log('    serve       launch development server');
   console.log('    watch       watch for file changes and rebuild automatically');
   console.log();
+  /* eslint-enable */
 });
 
 program

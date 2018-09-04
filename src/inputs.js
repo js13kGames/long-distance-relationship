@@ -41,21 +41,19 @@ module.exports = function(blockCallback) {
   }
 
   onkeypress = function(e) {
-    if (e.shiftKey) {
-      switch (e.keyCode) {
-        case 65:
-          blockCallback('left')
-          break
-        case 87:
-          blockCallback('up')
-          break
-        case 68:
-          blockCallback('right')
-          break
-        case 83:
-          blockCallback('down')
-          break
-      }
+    switch (e.keyCode) {
+      case 97:
+        blockCallback('left')
+        break
+      case 119:
+        blockCallback('up')
+        break
+      case 100:
+        blockCallback('right')
+        break
+      case 115:
+        blockCallback('down')
+        break
     }
   }
 

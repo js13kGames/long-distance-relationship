@@ -3,6 +3,7 @@
     "browser": true,
     "node": true
   },
+  "extends": "eslint:recommended",
   "rules": {
     // Code style
     "brace-style": [2, "1tbs"],
