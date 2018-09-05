@@ -43,6 +43,13 @@ module.exports = function (ctx, config, keys, gameState, updateMap) {
     }
   }
 
+  function collectRepBlock (map, x, y) {
+    if (map[y][x] === 3) {
+      gameState.changeRepairBlock(1)
+      map[y][x] = 0
+    }
+  }
+
   var hero = {
     posX: 0,
     posY: 0,
@@ -66,16 +73,30 @@ module.exports = function (ctx, config, keys, gameState, updateMap) {
       hero.blockWidth = config.width / numBlocksX
       hero.blockHeight = config.height / numBlocksY
 
-      // react to keys being pressed
-      if (!keys.left && !keys.right || keys.left && keys.right) hero.speedX = 0
-      if (keys.left && !keys.right) hero.speedX = -1 * basicSpeed
-      if (keys.right && !keys.left) hero.speedX = basicSpeed
+      // stop if stamina runs out
+      if (gameState.data.stamina <= 0) {
+        hero.speedX = 0
+      } else {
 
-      // jump
-      if (keys.up && hero.accY === 0) {
-        hero.speedY = -8
-        hero.accY = gravity
+        // react to keys being pressed
+        if (!keys.left && !keys.right || keys.left && keys.right) hero.speedX = 0
+        if (keys.left && !keys.right) {
+          hero.speedX = -1 * basicSpeed
+          gameState.changeStamina(-0.1)
+        }
+        if (keys.right && !keys.left) {
+          hero.speedX = basicSpeed
+          gameState.changeStamina(-0.1)
+        }
+
+        // jump
+        if (keys.up && hero.accY === 0) {
+          hero.speedY = -8
+          hero.accY = gravity
+          gameState.changeStamina(-0.1)
+        }
       }
+
 
       var speedX = hero.speedX
       var speedY = hero.speedY
@@ -98,13 +119,15 @@ module.exports = function (ctx, config, keys, gameState, updateMap) {
             var heroBorders = hero.getBorders()
 
             if (
-              // map[bottomBlock[1] + j] && map[bottomBlock[1] + j][bottomBlock[0] + i] &&
+              map[heroBlock[1] + j] && map[heroBlock[1] + j][heroBlock[0] + i] &&
               map[heroBlock[1] + j][heroBlock[0] + i] > 0 &&
               block.top < heroBorders.bottom &&
               block.bottom > heroBorders.top &&
               block.left < heroBorders.right &&
               block.right > heroBorders.left
             ) {
+              collectRepBlock(map, heroBlock[0] + i, heroBlock[1] + j)
+
               if (hero.speedX > 0) {
                 hero.posX = block.left - 0.5 * hero.blockWidth
                 speedX = step
@@ -149,13 +172,15 @@ module.exports = function (ctx, config, keys, gameState, updateMap) {
             heroBorders = hero.getBorders()
 
             if (
-              // map[bottomBlock[1] + j] && map[bottomBlock[1] + j][bottomBlock[0] + i] &&
+              map[heroBlock[1] + j] && map[heroBlock[1] + j][heroBlock[0] + i] &&
               map[heroBlock[1] + j][heroBlock[0] + i] > 0 &&
               block.top < heroBorders.bottom &&
               block.bottom > heroBorders.top &&
               block.left < heroBorders.right &&
               block.right > heroBorders.left
             ) {
+              collectRepBlock(map, heroBlock[0] + i, heroBlock[1] + j)
+
               if (hero.speedY > 0) {
                 hero.posY = block.top - 0.5 * hero.blockHeight
                 speedY = step
@@ -237,34 +262,40 @@ module.exports = function (ctx, config, keys, gameState, updateMap) {
         getBlockIndex(hero.posY, config.height, numBlocksY)
       ]
 
-      switch (direction) {
-        case 'left':
-          if (map[heroBlock[1]][heroBlock[0] - 1] === 0) {
-            map[heroBlock[1]][heroBlock[0] - 1] = 2
-          }
-          break
-        case 'right':
-          if (map[heroBlock[1]][heroBlock[0] + 1] === 0) {
-            map[heroBlock[1]][heroBlock[0] + 1] = 2
-          }
-          break
-        case 'up':
-          if (map[heroBlock[1] - 1][heroBlock[0]] === 0) {
-            map[heroBlock[1] - 1][heroBlock[0]] = 2
-          }
-          break
-        case 'down':
-          if (hero.speedY !== 0) {
-            if (map[heroBlock[1] + 1][heroBlock[0]] === 0) {
-              map[heroBlock[1] + 1][heroBlock[0]] = 2
+      if (gameState.data.buildBlocks > 0) {
+        switch (direction) {
+          case 'left':
+            if (map[heroBlock[1]][heroBlock[0] - 1] === 0) {
+              map[heroBlock[1]][heroBlock[0] - 1] = 2
             }
-          } else {
-            if (map[heroBlock[1] - 1][heroBlock[0]] < 1) {
-              hero.posY -= hero.blockHeight
-              map[heroBlock[1]][heroBlock[0]] = 2
+            break
+          case 'right':
+            if (map[heroBlock[1]][heroBlock[0] + 1] === 0) {
+              map[heroBlock[1]][heroBlock[0] + 1] = 2
+              gameState.changeBuildBlock(-1)
             }
-          }
-          break
+            break
+          case 'up':
+            if (map[heroBlock[1] - 1][heroBlock[0]] === 0) {
+              map[heroBlock[1] - 1][heroBlock[0]] = 2
+              gameState.changeBuildBlock(-1)
+            }
+            break
+          case 'down':
+            if (hero.speedY !== 0) {
+              if (map[heroBlock[1] + 1][heroBlock[0]] === 0) {
+                map[heroBlock[1] + 1][heroBlock[0]] = 2
+                gameState.changeBuildBlock(-1)
+              }
+            } else {
+              if (map[heroBlock[1] - 1][heroBlock[0]] < 1) {
+                hero.posY -= hero.blockHeight
+                map[heroBlock[1]][heroBlock[0]] = 2
+                gameState.changeBuildBlock(-1)
+              }
+            }
+            break
+        }
       }
     },
 
@@ -280,22 +311,26 @@ module.exports = function (ctx, config, keys, gameState, updateMap) {
         case 'left':
           if (map[heroBlock[1]][heroBlock[0] - 1] === 2) {
             map[heroBlock[1]][heroBlock[0] - 1] = 0
+            gameState.changeBuildBlock(1)
           }
           break
         case 'right':
           if (map[heroBlock[1]][heroBlock[0] + 1] === 2) {
             map[heroBlock[1]][heroBlock[0] + 1] = 0
+            gameState.changeBuildBlock(1)
           }
           break
         case 'up':
           if (map[heroBlock[1] - 1][heroBlock[0]] === 2) {
             map[heroBlock[1] - 1][heroBlock[0]] = 0
+            gameState.changeBuildBlock(1)
           }
           break
         case 'down':
           if (map[heroBlock[1] + 1][heroBlock[0]] === 2) {
             map[heroBlock[1] + 1][heroBlock[0]] = 0
             hero.accY = gravity
+            gameState.changeBuildBlock(1)
           }
           break
       }

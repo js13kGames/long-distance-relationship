@@ -26,10 +26,11 @@ function updateMap() {
 // Init modules
 map = mapGen(ctx, config)
 keys = inputs(blockPlaceCallback, blockPickupCallback)
-gameState = gameStateGen(map)
+gameState = gameStateGen(map, keys)
 hero = heroGen(ctx, config, keys, gameState, updateMap)
 
 updateMap()
+gameState.startDayNightCycle()
 // currMap = map.generate(128, 96)
 // currMap = map.homeMap
 // currMap = [
@@ -47,6 +48,7 @@ updateMap()
 raf.start(function() {
   // Clear the screen
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  gameState.refresh();
   hero.move(currMap);
   map.draw(currMap);
   hero.draw(currMap);
