@@ -133,7 +133,7 @@ module.exports = function (ctx, config, keys, gameState, updateMap) {
   hero.roundFloat = mov.roundFloat.bind(hero)
   hero.getBlockBorders = mov.getBlockBorders.bind(hero)
   hero.getBorders = mov.getBorders.bind(hero)
-  hero.collectRepBlock = mov.collectRepBlock.bind(hero)
+  hero.handleRepBlock = mov.handleRepBlock.bind(hero)
   hero.getBlockIndex = mov.getBlockIndex.bind(hero)
 
   return hero

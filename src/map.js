@@ -2,16 +2,24 @@ module.exports = function(ctx, config) {
 
   var tiles = {
     1: {
+      // ground
       color: '#000'
     },
     0: {
+      // air
       color: '#fff'
     },
     2: {
+      // build
       color: '#dddd0d'
     },
     3: {
+      // repair
       color: '#d30000'
+    },
+    10: {
+      // home
+      color: 'green'
     }
   }
 
@@ -22,6 +30,15 @@ module.exports = function(ctx, config) {
       row.push(i < 80? 0: 1)
     }
     _homeMap.push(row)
+
+  }
+  // add phonebox border
+  for (var k = 73; k < 80; k++) {
+    _homeMap[k][60] = 10
+    _homeMap[k][65] = 10
+  }
+  for (var l = 60; l < 66; l++) {
+    _homeMap[72][l] = 10
   }
 
   function _basicMap (width, height, emptyPercentage, flipped) {

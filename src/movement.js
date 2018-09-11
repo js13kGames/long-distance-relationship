@@ -23,10 +23,15 @@ module.exports = function (config, keys, gameState, updateMap) {
       }
     },
 
-    collectRepBlock: function (map, x, y) {
+    handleRepBlock: function (map, x, y) {
       if (map[y][x] === 3) {
         gameState.changeRepairBlock(1)
         map[y][x] = 0
+      } else if (map[y][x] === 10) {
+        var maxBlocks = (100 - gameState.data.health) / 5
+        var numBlocks = Math.min(maxBlocks, gameState.data.repairBlocks)
+        gameState.changeHealth(numBlocks * 5)
+        gameState.changeRepairBlock(-1 * numBlocks)
       }
     },
 
@@ -99,10 +104,12 @@ module.exports = function (config, keys, gameState, updateMap) {
               block.left < avatarBorders.right &&
               block.right > avatarBorders.left
             ) {
-              if (this.isHero) this.collectRepBlock(map, avatarBlock[0] + i, avatarBlock[1] + j)
+              if (this.isHero) this.handleRepBlock(map, avatarBlock[0] + i, avatarBlock[1] + j)
               else if (map[avatarBlock[1] + j][avatarBlock[0] + i] === 2){
-                this.destroy(index, true)
+                this.destroy(index, 'build')
                 map[avatarBlock[1] + j][avatarBlock[0] + i] = 0
+              } else if (map[avatarBlock[1] + j][avatarBlock[0] + i] === 10){
+                this.destroy(index, 'home')
               }
 
               if (this.speedX > 0) {
@@ -165,10 +172,12 @@ module.exports = function (config, keys, gameState, updateMap) {
               block.left < avatarBorders.right &&
               block.right > avatarBorders.left
             ) {
-              if (this.isHero) this.collectRepBlock(map, avatarBlock[0] + i, avatarBlock[1] + j)
+              if (this.isHero) this.handleRepBlock(map, avatarBlock[0] + i, avatarBlock[1] + j)
               else if (map[avatarBlock[1] + j][avatarBlock[0] + i] === 2){
-                this.destroy(index, true)
+                this.destroy(index, 'build')
                 map[avatarBlock[1] + j][avatarBlock[0] + i] = 0
+              } else if (map[avatarBlock[1] + j][avatarBlock[0] + i] === 10){
+                this.destroy(index, 'home')
               }
 
               if (this.speedY > 0) {

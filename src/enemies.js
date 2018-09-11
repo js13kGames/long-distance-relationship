@@ -92,8 +92,9 @@ module.exports = function (ctx, config, keys, gameState) {
         }
       },
 
-      destroy: function (i, dontInflictDamage) {
-        if (!dontInflictDamage) gameState.changeStamina(-20)
+      destroy: function (i, type) {
+        if (!type) gameState.changeStamina(-20)
+        else if (type === 'home') gameState.changeHealth(-10)
         _addExplosion(noise)
         _noises.splice(i, 1)
       }
@@ -102,7 +103,7 @@ module.exports = function (ctx, config, keys, gameState) {
     noise.roundFloat = mov.roundFloat.bind(noise)
     noise.getBlockBorders = mov.getBlockBorders.bind(noise)
     noise.getBorders = mov.getBorders.bind(noise)
-    noise.collectRepBlock = mov.collectRepBlock.bind(noise)
+    noise.handleRepBlock = mov.handleRepBlock.bind(noise)
     noise.getBlockIndex = mov.getBlockIndex.bind(noise)
 
     _noises.push(noise)
