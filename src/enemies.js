@@ -7,8 +7,8 @@ module.exports = function (ctx, config, keys, gameState) {
   var mov = Movement(config, keys, gameState)
 
   function _moveAll (map) {
-    _noises.forEach(function (noise) {
-      noise.move(map)
+    _noises.forEach(function (noise, i) {
+      noise.move(map, i)
     })
   }
 
@@ -18,8 +18,8 @@ module.exports = function (ctx, config, keys, gameState) {
     })
   }
 
-  function _checkCollisionAll (hero, i) {
-    _noises.forEach(function (noise) {
+  function _checkCollisionAll (hero) {
+    _noises.forEach(function (noise, i) {
       noise.checkCollision(hero, i)
     })
   }
@@ -88,10 +88,14 @@ module.exports = function (ctx, config, keys, gameState) {
           noiseBorders.left < heroBorders.right &&
           noiseBorders.right > heroBorders.left
         ) {
-          gameState.changeStamina(-20)
-          _addExplosion(noise)
-          _noises.splice(i, 1)
+          noise.destroy(i)
         }
+      },
+
+      destroy: function (i, dontInflictDamage) {
+        if (!dontInflictDamage) gameState.changeStamina(-20)
+        _addExplosion(noise)
+        _noises.splice(i, 1)
       }
     }
     noise.move = mov.move.bind(noise)

@@ -35,7 +35,7 @@ module.exports = function (config, keys, gameState, updateMap) {
       return possibleMax > num - 1 ? num - 1 : possibleMax
     },
 
-    move: function (map) {
+    move: function (map, index) {
       var numBlocksX = map[0].length
       var numBlocksY = map.length
       this.blockWidth = config.width / numBlocksX
@@ -100,6 +100,10 @@ module.exports = function (config, keys, gameState, updateMap) {
               block.right > avatarBorders.left
             ) {
               if (this.isHero) this.collectRepBlock(map, avatarBlock[0] + i, avatarBlock[1] + j)
+              else if (map[avatarBlock[1] + j][avatarBlock[0] + i] === 2){
+                this.destroy(index, true)
+                map[avatarBlock[1] + j][avatarBlock[0] + i] = 0
+              }
 
               if (this.speedX > 0) {
                 this.posX = block.left - 0.5 * this.blockWidth
@@ -162,6 +166,10 @@ module.exports = function (config, keys, gameState, updateMap) {
               block.right > avatarBorders.left
             ) {
               if (this.isHero) this.collectRepBlock(map, avatarBlock[0] + i, avatarBlock[1] + j)
+              else if (map[avatarBlock[1] + j][avatarBlock[0] + i] === 2){
+                this.destroy(index, true)
+                map[avatarBlock[1] + j][avatarBlock[0] + i] = 0
+              }
 
               if (this.speedY > 0) {
                 this.posY = block.top - 0.5 * this.blockHeight
