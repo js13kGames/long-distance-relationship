@@ -101,13 +101,16 @@ module.exports = function(ctx, config) {
     return newMap
   }
 
-function _addTreasure(map) {
+function _addTreasure(map, amount, type) {
   var randHeight, randWidth
-  do {
-    randHeight = Math.floor(Math.random() * map.length)
-    randWidth = Math.floor(Math.random() * map[0].length)
-  } while (map[randHeight][randWidth] !== 0)
-  map[randHeight][randWidth] = 3
+
+  for (var i = 0; i < amount; i++) {
+    do {
+      randHeight = Math.floor(Math.random() * map.length)
+      randWidth = Math.floor(Math.random() * map[0].length)
+    } while (map[randHeight][randWidth] !== 0)
+    map[randHeight][randWidth] = type
+  }
 }
 
   return {
@@ -144,7 +147,8 @@ function _addTreasure(map) {
       for (var i = 0; i < 10; i++) {
         map = _doSimulationStep(map, 4, 4)
       }
-      _addTreasure(map)
+      _addTreasure(map, 1, 3);
+      _addTreasure(map, 3, 2);
       return map
     }
   }
