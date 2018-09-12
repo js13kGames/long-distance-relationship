@@ -14,7 +14,7 @@ module.exports = function (map, keys) {
   var data = {
     time: 0,
     night: false,
-    repairBlocks: 0,
+    repairBlocks: 10,
     buildBlocks: 20,
     stamina: 100,
     health: 100

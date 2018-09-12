@@ -24,6 +24,8 @@ module.exports = function (ctx, config, keys, gameState, updateMap) {
   }
 
   var mov = Movement(config, keys, gameState, updateMap)
+  var teleportTimeout
+  var teleportCircleCircumference = 0
 
   var hero = {
     posX: 0,
@@ -123,6 +125,79 @@ module.exports = function (ctx, config, keys, gameState, updateMap) {
             gameState.changeBuildBlock(1)
           }
           break
+      }
+    },
+
+    drawTeleport: function () {
+      var tempLineWidth = ctx.lineWidth
+      ctx.lineWidth = 3
+      ctx.strokeStyle='blue';
+      ctx.beginPath()
+      ctx.arc(
+        hero.posX,
+        hero.posY,
+        teleportCircleCircumference,
+        0,
+        2*Math.PI
+      )
+      ctx.stroke()
+      ctx.lineWidth = tempLineWidth
+    },
+
+    startTeleport: function (map, updateMap) {
+
+      teleportCircleCircumference += 0.15
+
+      if (!teleportTimeout) {
+        teleportTimeout = setTimeout(function () {
+          // block dump
+          if (gameState.data.buildBlocks > 0 || gameState.data.repairBlocks > 0) {
+            var numBlocksX = map[0].length
+            var numBlocksY = map.length
+            var heroBlock = [
+              hero.getBlockIndex(hero.posX, config.width, numBlocksX),
+              hero.getBlockIndex(hero.posY, config.height, numBlocksY)
+            ]
+
+            var numBlocks = gameState.data.buildBlocks + gameState.data.repairBlocks
+            var side = Math.sqrt(numBlocks)
+            var offset = Math.min(Math.floor(side / 2), heroBlock[0]) * -1
+            while ((gameState.data.buildBlocks > 0 || gameState.data.repairBlocks > 0) && heroBlock[1] > 0) {
+              for (var i = 0; i < side; i++) {
+                var x = heroBlock[0] + offset + i
+                if (map[heroBlock[1]][x] === 0) {
+                  if (gameState.data.repairBlocks > 0) {
+                    map[heroBlock[1]][x] = 3
+                    gameState.changeRepairBlock(-1)
+                  } else if (gameState.data.buildBlocks > 0) {
+                    map[heroBlock[1]][x] = 2
+                    gameState.changeBuildBlock(-1)
+                  }
+                }
+              }
+              heroBlock[1] -= 1
+            }
+          }
+          gameState.changeBuildBlock(gameState.data.buildBlocks * -1)
+          gameState.changeRepairBlock(gameState.data.repairBlocks * -1)
+
+          // reposition
+          hero.posX = init.posX
+          hero.posY = init.posY
+          hero.accY = config.gravity
+          gameState.currentMapStack.splice(0, gameState.currentMapStack.length)
+          updateMap()
+          teleportTimeout = null
+          teleportCircleCircumference = 0
+        }, 2000)
+      }
+    },
+
+    stopTeleport: function () {
+      if (teleportTimeout) {
+        clearTimeout(teleportTimeout)
+        teleportTimeout = null
+        teleportCircleCircumference = 0
       }
     }
   }

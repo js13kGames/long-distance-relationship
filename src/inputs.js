@@ -1,9 +1,9 @@
-module.exports = function(blockPlaceCallback, blockPickupCallback) {
+module.exports = function(blockPlaceCallback, blockPickupCallback, startTeleportCallback, stopTeleportCallback) {
   var keys = {
     up: false,
     down: false,
     left: false,
-    right: false
+    right: false,
   }
 
   onkeydown = function(e) {
@@ -19,6 +19,10 @@ module.exports = function(blockPlaceCallback, blockPickupCallback) {
         break
       case 40:
         keys.down = true
+        break
+      case 116:
+      case 84:
+        startTeleportCallback()
         break
     }
   }
@@ -36,6 +40,10 @@ module.exports = function(blockPlaceCallback, blockPickupCallback) {
         break
       case 40:
         keys.down = false
+        break
+      case 116:
+      case 84:
+        stopTeleportCallback()
         break
     }
   }

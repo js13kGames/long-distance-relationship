@@ -25,9 +25,17 @@ function updateMap() {
   currMap = gameState.getCurrentMap()
 }
 
+function startTeleportCallback () {
+  hero.startTeleport(currMap, updateMap)
+}
+
+function stopTeleportCallback () {
+  hero.stopTeleport()
+}
+
 // Init modules
 map = mapGen(ctx, config)
-keys = inputs(blockPlaceCallback, blockPickupCallback)
+keys = inputs(blockPlaceCallback, blockPickupCallback, startTeleportCallback, stopTeleportCallback)
 gameState = gameStateGen(map, keys)
 hero = heroGen(ctx, config, keys, gameState, updateMap)
 enemies = enemiesGen(ctx, ememyConfig, keys, gameState)
@@ -60,4 +68,5 @@ raf.start(function() {
   hero.draw()
   enemies.drawAll()
   enemies.explosionsPropagateAll()
+  hero.drawTeleport()
 });
