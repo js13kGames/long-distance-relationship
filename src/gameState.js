@@ -1,4 +1,4 @@
-module.exports = function (map, keys) {
+module.exports = function (map, keys, addNoise) {
   // Init world map
   var currentMapStack = []
   var MAP_WIDTH = 128
@@ -13,8 +13,11 @@ module.exports = function (map, keys) {
 
   var data = {
     time: 0,
+    phoneCallTime: 10,
+    phoneRinging: false,
+    daysPassed: 0,
     night: false,
-    repairBlocks: 10,
+    repairBlocks: 0,
     buildBlocks: 20,
     stamina: 100,
     health: 100
@@ -43,13 +46,29 @@ module.exports = function (map, keys) {
   var healthProgress = document.getElementById('health')
   var buildBlocksCount = document.getElementById('build-blocks')
   var repairBlocksCount = document.getElementById('rep-blocks')
+  var callIndicator = document.getElementById('call')
 
   function _startDayNightCycle() {
     setInterval(function () {
-      data.time += 0.25
+      data.time += 0.5
 
-      if (data.timelue >= 70) data.night = true
+      // phonecall
+      if (data.time > data.phoneCallTime && data.time < data.phoneCallTime + 5 && !data.phoneRinging){
+        data.phoneRinging = true
+        callIndicator.className += ' ringing'
+      }
+      if (data.time > data.phoneCallTime + 5 && data.phoneRinging) {
+        _missPhoneCall()
+      }
 
+      // night
+      if (data.time >= 70) {
+        data.night = true
+        var threshold = (80 - data.daysPassed - currentMapStack.length) / 100
+        if (Math.random() > threshold) addNoise()
+      }
+
+      // end of day
       if (data.time >= 100) {
         _startNewDay()
         data.time = 0
@@ -59,9 +78,17 @@ module.exports = function (map, keys) {
   }
 
   function _startNewDay () {
+    data.phoneCallTime = Math.floor(Math.random() * 80)
     data.night = false
+    data.daysPassed += 1
+    callIndicator.setAttribute('style', 'left: ' + data.phoneCallTime + '%')
   }
 
+  function _missPhoneCall () {
+    callIndicator.className = callIndicator.className.replace(' ringing', '')
+    _changeHealth(-30)
+    data.phoneRinging = false
+  }
 
   function _changeBuildBlock (num) {
     data.buildBlocks += num
@@ -81,13 +108,18 @@ module.exports = function (map, keys) {
   function _changeHealth (num) {
     data.health += num
     healthProgress.setAttribute('value', data.health)
+    if (data.health <= 0) _gameOver()
   }
 
   function _refresh () {
-    // start resoring stamina if no keys pressed
+    // start restoring stamina if no keys pressed
     if (data.stamina < 100 && !keys.up && !keys.left && !keys.right) {
       _changeStamina(0.2)
     }
+  }
+
+  function _gameOver () {
+    console.log('game over')
   }
 
   return {

@@ -32,6 +32,11 @@ module.exports = function (config, keys, gameState, updateMap) {
         var numBlocks = Math.min(maxBlocks, gameState.data.repairBlocks)
         gameState.changeHealth(numBlocks * 5)
         gameState.changeRepairBlock(-1 * numBlocks)
+
+        if (gameState.data.phoneRinging) {
+          gameState.data.phoneRinging = false
+          gameState.data.phoneCallTime = -10
+        }
       }
     },
 

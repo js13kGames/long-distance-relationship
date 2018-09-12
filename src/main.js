@@ -23,6 +23,7 @@ function blockPickupCallback (direction) {
 
 function updateMap() {
   currMap = gameState.getCurrentMap()
+  enemies.update((gameState.currentMapStack.length + gameState.data.daysPassed) / 2)
 }
 
 function startTeleportCallback () {
@@ -33,16 +34,20 @@ function stopTeleportCallback () {
   hero.stopTeleport()
 }
 
+function addNoise () {
+  enemies.addNoise()
+}
+
 // Init modules
 map = mapGen(ctx, config)
 keys = inputs(blockPlaceCallback, blockPickupCallback, startTeleportCallback, stopTeleportCallback)
-gameState = gameStateGen(map, keys)
+gameState = gameStateGen(map, keys, addNoise)
 hero = heroGen(ctx, config, keys, gameState, updateMap)
 enemies = enemiesGen(ctx, ememyConfig, keys, gameState)
 
 updateMap()
 gameState.startDayNightCycle()
-enemies.addNoise()
+addNoise()
 // currMap = map.generate(128, 96)
 // currMap = map.homeMap
 // currMap = [

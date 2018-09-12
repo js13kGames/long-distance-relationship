@@ -8,31 +8,76 @@
 .game-info {
   width: 1024px;
   margin: auto;
+}
 
-  .day-night {
+.day-night {
+  width: 100%;
+  position: relative;
+  padding: 3px 0;
+
+  progress {
     width: 100%;
+  }
+}
+
+.night {
+  position: absolute;
+  height: 100%;
+  width: 31%;
+  right: 0;
+  background-color: grey;
+  z-index: -1;
+  top: 0px;
+}
+
+.call {
+  background-color: green;
+  height: 1em;
+  width: 1em;
+  border-radius: 50%;
+  position: absolute;
+  top: 4px;
+  left: 10%;
+}
+
+.ringing {
+    animation:flash 0.5s;
+    -moz-animation:flash 0.5s infinite; /* Firefox */
+    -webkit-animation:flash 0.5s infinite; /* Safari and Chrome */
+}
+
+@keyframes flash {
+    0% {background-color:green;}
+    50% {background-color:yellow;}
+    100% {background-color:green;}
+}
+
+@-moz-keyframes flash {
+    0% {background-color:green;}
+    50% {background-color:yellow;}
+    100% {background-color:green;}
+}
+
+@-webkit-keyframes myfirst {
+    0% {background-color:green;}
+    50% {background-color:yellow;}
+    100% {background-color:green;}
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+
+  & > * {
+    display: flex;
+    flex-direction: column;
 
     progress {
-      width: 100%;
+      width: 400px
     }
   }
 
-  .stats {
-    display: flex;
-    justify-content: space-between;
-
-    & > * {
-      display: flex;
-      flex-direction: column;
-
-      progress {
-        width: 400px
-      }
-    }
-
-    span {
-      text-align: right;
-    }
+  span {
+    text-align: right;
   }
-
 }

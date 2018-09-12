@@ -61,8 +61,8 @@ module.exports = function (ctx, config, keys, gameState) {
 
   function _addNoise () {
     var noise = {
-      posX: 200,
-      posY: 500,
+      posX: Math.random() * (config.width - 20) + 10,
+      posY: Math.random() * (config.height - 20) + 10,
       speedX: config.basicSpeed,
       speedY: 0,
       accX: 0,
@@ -109,12 +109,20 @@ module.exports = function (ctx, config, keys, gameState) {
     _noises.push(noise)
   }
 
+  function _update (diff) {
+    _noises.splice(0, _noises.length)
+    for (var i = 0; i < diff; i++){
+      if (Math.random() > 0.5) _addNoise()
+    }
+  }
+
   return {
     noises: _noises,
     moveAll: _moveAll,
     drawAll: _drawAll,
     addNoise: _addNoise,
     checkCollisionAll: _checkCollisionAll,
-    explosionsPropagateAll: _explosionsPropagateAll
+    explosionsPropagateAll: _explosionsPropagateAll,
+    update: _update
   }
 }
