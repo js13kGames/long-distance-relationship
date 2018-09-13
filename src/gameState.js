@@ -54,11 +54,12 @@ module.exports = function (map, keys, addNoise, updateMap, heroReset) {
   var summary = document.getElementById('summary')
   var resume = document.getElementById('resume')
   var reset = document.getElementById('reset')
+  var dayState = document.getElementById('days-state')
 
   function _startDayNightCycle() {
     setInterval(function () {
       if (!data.paused) {
-        data.time += 0.5
+        data.time += 3
 
         // phonecall
         if (data.time > data.phoneCallTime && data.time < data.phoneCallTime + 5 && !data.phoneRinging){
@@ -128,6 +129,9 @@ module.exports = function (map, keys, addNoise, updateMap, heroReset) {
   }
 
   function _gameOver () {
+    tutorial.className = 'tutorial hidden'
+    summary.className = 'summary'
+    dayState.innerHTML = data.daysPassed
     _pause()
   }
 
@@ -155,6 +159,8 @@ module.exports = function (map, keys, addNoise, updateMap, heroReset) {
     currentMapStack.splice(0, currentMapStack.length)
     updateMap()
     heroReset()
+    tutorial.className = 'tutorial'
+    summary.className = 'summary hidden'
     _resume()
   }
 
@@ -173,13 +179,6 @@ module.exports = function (map, keys, addNoise, updateMap, heroReset) {
     refresh: _refresh,
     callIndicator: callIndicator,
     pause: _pause,
-    resume: _resume,
-    menu : {
-      overlay: overlay,
-      tutorial: tutorial,
-      summary: summary,
-      resume: resume,
-      reset: reset
-    }
+    resume: _resume
   }
 }

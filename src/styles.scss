@@ -1,5 +1,10 @@
 body {
   font-family: sans-serif;
+  text-align: center;
+}
+
+h1 {
+  margin: 1.5em;
 }
 
 #game {
@@ -94,6 +99,9 @@ body {
   width: 100vw;
   background-color: #aaaaaaaa;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .hidden {
@@ -108,4 +116,11 @@ body {
     cursor: pointer;
     display: inline-block;
   }
+
+  text-align: center;
+}
+
+.tutorial {
+  text-align: center;
+  margin-bottom: 3em;
 }
