@@ -6,8 +6,8 @@ module.exports = function (map, keys, addNoise) {
   var maps = {
     home: map.homeMap,
     children: [
-      {map: map.generate(MAP_WIDTH, MAP_HEIGHT, true)},
-      {map: map.generate(MAP_WIDTH, MAP_HEIGHT)}
+      {map: map.generate(MAP_WIDTH, MAP_HEIGHT, true, currentMapStack.length)},
+      {map: map.generate(MAP_WIDTH, MAP_HEIGHT, false, currentMapStack.length)}
     ]
   }
 
@@ -32,8 +32,8 @@ module.exports = function (map, keys, addNoise) {
 
       if (!currentMapObj.children) {
         currentMapObj.children = [
-          {map: map.generate(MAP_WIDTH, MAP_HEIGHT, currentMapStack[0] === 0)},
-          {map: map.generate(MAP_WIDTH, MAP_HEIGHT, currentMapStack[0] === 0)}
+          {map: map.generate(MAP_WIDTH, MAP_HEIGHT, currentMapStack[0] === 0, currentMapStack.length)},
+          {map: map.generate(MAP_WIDTH, MAP_HEIGHT, currentMapStack[0] === 0, currentMapStack.length)}
         ]
       }
       currentMapObj = currentMapObj.children[index]
@@ -131,6 +131,7 @@ module.exports = function (map, keys, addNoise) {
     changeRepairBlock: _changeRepairBlock,
     changeStamina: _changeStamina,
     changeHealth: _changeHealth,
-    refresh: _refresh
+    refresh: _refresh,
+    callIndicator: callIndicator
   }
 }

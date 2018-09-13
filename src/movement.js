@@ -36,6 +36,7 @@ module.exports = function (config, keys, gameState, updateMap) {
         if (gameState.data.phoneRinging) {
           gameState.data.phoneRinging = false
           gameState.data.phoneCallTime = -10
+          gameState.callIndicator.className = gameState.callIndicator.className.replace(' ringing', '')
         }
       }
     },
@@ -143,7 +144,7 @@ module.exports = function (config, keys, gameState, updateMap) {
               block.left < avatarBorders.right &&
               block.right > avatarBorders.left
             ) {
-              blocksBelow = blocksBelow || map[avatarBlock[1] + j][avatarBlock[0] + i] > 0
+              blocksBelow = blocksBelow || (map[avatarBlock[1] + j] && map[avatarBlock[1] + j][avatarBlock[0] + i] > 0)
             }
           }
         }

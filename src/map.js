@@ -159,13 +159,14 @@ function _addTreasure(map, amount, type) {
       })
     },
 
-    generate: function (width, height, flipped) {
-      var map = _basicMap(width, height, 0.43, flipped)
+    generate: function (width, height, flipped, diff) {
+      var fillAmount = 0.43 + diff / 100 > 0.49 ? 0.49 : 0.43 + diff / 100
+      var map = _basicMap(width, height, fillAmount, flipped)
       for (var i = 0; i < 10; i++) {
         map = _doSimulationStep(map, 4, 4)
       }
-      _addTreasure(map, 1, 3);
-      _addTreasure(map, 3, 2);
+      _addTreasure(map, 1 + diff, 3);
+      _addTreasure(map, 1.5 * diff + 3, 2);
       return map
     }
   }
