@@ -34,44 +34,41 @@ function stopTeleportCallback () {
   hero.stopTeleport()
 }
 
+function pauseCallback () {
+  gameState.pause()
+}
+
 function addNoise () {
   enemies.addNoise()
 }
 
+function heroReset () {
+  hero.positionReset()
+}
+
 // Init modules
+keys = inputs(blockPlaceCallback, blockPickupCallback, startTeleportCallback, stopTeleportCallback, pauseCallback)
 map = mapGen(ctx, config)
-keys = inputs(blockPlaceCallback, blockPickupCallback, startTeleportCallback, stopTeleportCallback)
-gameState = gameStateGen(map, keys, addNoise)
+gameState = gameStateGen(map, keys, addNoise, updateMap, heroReset)
 hero = heroGen(ctx, config, keys, gameState, updateMap)
 enemies = enemiesGen(ctx, ememyConfig, keys, gameState)
 
 updateMap()
 gameState.startDayNightCycle()
 addNoise()
-// currMap = map.generate(128, 96)
-// currMap = map.homeMap
-// currMap = [
-//   [1, 0, 0, 0, 0, 0, 1],
-//   [1, 0, 0, 0, 0, 0, 1],
-//   [1, 0, 0, 0, 0, 0, 1],
-//   [1, 0, 0, 0, 0, 0, 1],
-//   [1, 0, 0, 0, 0, 0, 1],
-//   [1, 0, 1, 1, 0, 0, 1],
-//   [1, 0, 0, 0, 0, 0, 1],
-//   [1, 0, 0, 0, 0, 0, 1],
-//   [1, 1, 1, 1, 1, 1, 1],
-// ]
 
 raf.start(function() {
   // Clear the screen
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
-  gameState.refresh()
-  hero.move(currMap)
-  enemies.moveAll(currMap)
-  enemies.checkCollisionAll(hero)
-  map.draw(currMap)
-  hero.draw()
-  enemies.drawAll()
-  enemies.explosionsPropagateAll()
-  hero.drawTeleport()
+  if (!gameState.data.paused) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    gameState.refresh()
+    hero.move(currMap)
+    enemies.moveAll(currMap)
+    enemies.checkCollisionAll(hero)
+    map.draw(currMap)
+    hero.draw()
+    enemies.drawAll()
+    enemies.explosionsPropagateAll()
+    hero.drawTeleport()
+  }
 });

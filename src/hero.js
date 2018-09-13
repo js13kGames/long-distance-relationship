@@ -36,6 +36,12 @@ module.exports = function (ctx, config, keys, gameState, updateMap) {
     accY: config.gravity,
     isHero: true,
 
+    positionReset: function () {
+      hero.posX = init.posX
+      hero.posY = init.posY
+      hero.accY = config.gravity
+    },
+
     draw: function () {
       ctx.fillStyle = '#614433'
       ctx.fillRect(

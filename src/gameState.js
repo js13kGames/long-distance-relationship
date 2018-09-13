@@ -1,4 +1,4 @@
-module.exports = function (map, keys, addNoise) {
+module.exports = function (map, keys, addNoise, updateMap, heroReset) {
   // Init world map
   var currentMapStack = []
   var MAP_WIDTH = 128
@@ -12,6 +12,7 @@ module.exports = function (map, keys, addNoise) {
   }
 
   var data = {
+    paused: true,
     time: 0,
     phoneCallTime: 10,
     phoneRinging: false,
@@ -48,32 +49,40 @@ module.exports = function (map, keys, addNoise) {
   var repairBlocksCount = document.getElementById('rep-blocks')
   var callIndicator = document.getElementById('call')
 
+  var overlay = document.getElementById('overlay')
+  var tutorial = document.getElementById('tutorial')
+  var summary = document.getElementById('summary')
+  var resume = document.getElementById('resume')
+  var reset = document.getElementById('reset')
+
   function _startDayNightCycle() {
     setInterval(function () {
-      data.time += 0.5
+      if (!data.paused) {
+        data.time += 0.5
 
-      // phonecall
-      if (data.time > data.phoneCallTime && data.time < data.phoneCallTime + 5 && !data.phoneRinging){
-        data.phoneRinging = true
-        callIndicator.className += ' ringing'
-      }
-      if (data.time > data.phoneCallTime + 5 && data.phoneRinging) {
-        _missPhoneCall()
-      }
+        // phonecall
+        if (data.time > data.phoneCallTime && data.time < data.phoneCallTime + 5 && !data.phoneRinging){
+          data.phoneRinging = true
+          callIndicator.className += ' ringing'
+        }
+        if (data.time > data.phoneCallTime + 5 && data.phoneRinging) {
+          _missPhoneCall()
+        }
 
-      // night
-      if (data.time >= 70) {
-        data.night = true
-        var threshold = (80 - data.daysPassed - currentMapStack.length) / 100
-        if (Math.random() > threshold) addNoise()
-      }
+        // night
+        if (data.time >= 70) {
+          data.night = true
+          var threshold = (80 - data.daysPassed - currentMapStack.length) / 100
+          if (Math.random() > threshold) addNoise()
+        }
 
-      // end of day
-      if (data.time >= 100) {
-        _startNewDay()
-        data.time = 0
+        // end of day
+        if (data.time >= 100) {
+          _startNewDay()
+          data.time = 0
+        }
+        dayNightProgress.setAttribute('value', data.time)
       }
-      dayNightProgress.setAttribute('value', data.time)
     }, 1000)
   }
 
@@ -119,8 +128,38 @@ module.exports = function (map, keys, addNoise) {
   }
 
   function _gameOver () {
-    console.log('game over')
+    _pause()
   }
+
+  function _pause () {
+    data.paused = true
+    overlay.className = overlay.className.replace('hidden', '')
+  }
+
+  function _resume () {
+    data.paused = false
+    overlay.className += ' hidden'
+  }
+
+  function _reset () {
+    data.paused = true
+    data.time = 0
+    data.phoneCallTime = 10
+    data.phoneRinging = false
+    data.daysPassed = 0
+    data.night = false
+    data.repairBlocks = 0
+    data.buildBlocks = 20
+    data.stamina = 100
+    data.health = 100
+    currentMapStack.splice(0, currentMapStack.length)
+    updateMap()
+    heroReset()
+    _resume()
+  }
+
+  resume.onclick = _resume
+  reset.onclick = _reset
 
   return {
     data: data,
@@ -132,6 +171,15 @@ module.exports = function (map, keys, addNoise) {
     changeStamina: _changeStamina,
     changeHealth: _changeHealth,
     refresh: _refresh,
-    callIndicator: callIndicator
+    callIndicator: callIndicator,
+    pause: _pause,
+    resume: _resume,
+    menu : {
+      overlay: overlay,
+      tutorial: tutorial,
+      summary: summary,
+      resume: resume,
+      reset: reset
+    }
   }
 }

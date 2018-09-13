@@ -1,3 +1,7 @@
+body {
+  font-family: sans-serif;
+}
+
 #game {
   margin: 10px auto 0;
   display: block;
@@ -79,5 +83,29 @@
 
   span {
     text-align: right;
+  }
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: #aaaaaaaa;
+  z-index: 2;
+}
+
+.hidden {
+  display: none;
+}
+
+.buttons {
+  & > div {
+    padding: 1em;
+    background-color: #fff;
+    color: #000;
+    cursor: pointer;
+    display: inline-block;
   }
 }
