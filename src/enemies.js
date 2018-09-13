@@ -112,7 +112,7 @@ module.exports = function (ctx, config, keys, gameState) {
   function _update (diff) {
     _noises.splice(0, _noises.length)
     for (var i = 0; i < diff; i++){
-      if (Math.random() > 0.5) _addNoise()
+      if (Math.random() > 0.5 || gameState.data.night) _addNoise()
     }
   }
 

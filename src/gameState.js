@@ -59,7 +59,7 @@ module.exports = function (map, keys, addNoise, updateMap, heroReset) {
   function _startDayNightCycle() {
     setInterval(function () {
       if (!data.paused) {
-        data.time += 3
+        data.time += 1
 
         // phonecall
         if (data.time > data.phoneCallTime && data.time < data.phoneCallTime + 5 && !data.phoneRinging){
@@ -141,8 +141,10 @@ module.exports = function (map, keys, addNoise, updateMap, heroReset) {
   }
 
   function _resume () {
-    data.paused = false
-    overlay.className += ' hidden'
+    if (data.health > 0) {
+      data.paused = false
+      overlay.className += ' hidden'
+    }
   }
 
   function _reset () {

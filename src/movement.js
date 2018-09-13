@@ -61,11 +61,19 @@ module.exports = function (config, keys, gameState, updateMap) {
           // react to keys being pressed
           if (!keys.left && !keys.right || keys.left && keys.right) this.speedX = 0
           if (keys.left && !keys.right) {
-            this.speedX = -1 * config.basicSpeed
+            if (this.speedX > -1 * config.basicSpeed) {
+              this.accX = -1 * config.accX
+            } else {
+              this.accX = 0
+            }
             gameState.changeStamina(-0.1)
           }
           if (keys.right && !keys.left) {
-            this.speedX = config.basicSpeed
+            if (this.speedX < config.basicSpeed) {
+              this.accX = config.accX
+            } else {
+              this.accX = 0
+            }
             gameState.changeStamina(-0.1)
           }
 

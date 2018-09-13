@@ -8,7 +8,7 @@ var gameStateGen = require('./gameState')
 var canvas = document.querySelector('#game')
 var ctx = canvas.getContext('2d')
 
-var config = {width: canvas.width, height: canvas.height, gravity: 0.5, basicSpeed: 5}
+var config = {width: canvas.width, height: canvas.height, gravity: 0.5, basicSpeed: 5, accX: 1}
 var ememyConfig = {width: canvas.width, height: canvas.height, gravity: 0.1, basicSpeed: 2}
 
 var hero, map, keys, currMap, gameState, enemies
