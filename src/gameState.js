@@ -56,15 +56,19 @@ module.exports = function (map, keys, addNoise, updateMap, heroReset) {
   var reset = document.getElementById('reset')
   var dayState = document.getElementById('days-state')
 
+  var game = document.getElementById('game')
+  var dayNightContainer = document.getElementById('day-night-container')
+
   function _startDayNightCycle() {
     setInterval(function () {
       if (!data.paused) {
-        data.time += 1
+        data.time += 0.75
 
         // phonecall
         if (data.time > data.phoneCallTime && data.time < data.phoneCallTime + 5 && !data.phoneRinging){
           data.phoneRinging = true
           callIndicator.className += ' ringing'
+          dayNightContainer.className += ' game-ringing'
         }
         if (data.time > data.phoneCallTime + 5 && data.phoneRinging) {
           _missPhoneCall()
@@ -96,6 +100,7 @@ module.exports = function (map, keys, addNoise, updateMap, heroReset) {
 
   function _missPhoneCall () {
     callIndicator.className = callIndicator.className.replace(' ringing', '')
+    dayNightContainer.className = dayNightContainer.className.replace( ' game-ringing', '')
     _changeHealth(-30)
     data.phoneRinging = false
   }
@@ -118,6 +123,14 @@ module.exports = function (map, keys, addNoise, updateMap, heroReset) {
   function _changeHealth (num) {
     data.health += num
     healthProgress.setAttribute('value', data.health)
+
+    if (num < 0) {
+      game.className = game.className.replace('injured', '')
+      setTimeout(function () {
+        game.className += ' injured'
+      }, 1)
+    }
+
     if (data.health <= 0) _gameOver()
   }
 
@@ -161,6 +174,7 @@ module.exports = function (map, keys, addNoise, updateMap, heroReset) {
     currentMapStack.splice(0, currentMapStack.length)
     updateMap()
     heroReset()
+    dayNightContainer.className = dayNightContainer.className.replace( ' game-ringing', '')
     tutorial.className = 'tutorial'
     summary.className = 'summary hidden'
     _resume()
@@ -180,6 +194,7 @@ module.exports = function (map, keys, addNoise, updateMap, heroReset) {
     changeHealth: _changeHealth,
     refresh: _refresh,
     callIndicator: callIndicator,
+    dayNightContainer: dayNightContainer,
     pause: _pause,
     resume: _resume
   }

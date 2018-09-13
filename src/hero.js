@@ -43,7 +43,7 @@ module.exports = function (ctx, config, keys, gameState, updateMap) {
     },
 
     draw: function () {
-      ctx.fillStyle = '#614433'
+      ctx.fillStyle = '#fff'
       ctx.fillRect(
         hero.posX - hero.blockWidth / 2,
         hero.posY - hero.blockHeight / 2,
@@ -137,7 +137,7 @@ module.exports = function (ctx, config, keys, gameState, updateMap) {
     drawTeleport: function () {
       var tempLineWidth = ctx.lineWidth
       ctx.lineWidth = 3
-      ctx.strokeStyle='blue';
+      ctx.strokeStyle='#03A3B9';
       ctx.beginPath()
       ctx.arc(
         hero.posX,

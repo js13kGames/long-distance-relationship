@@ -3,15 +3,15 @@ module.exports = function(ctx, config) {
   var tiles = {
     1: {
       // ground
-      color: '#000'
+      color: '#5A5A5A'
     },
     0: {
       // air
-      color: '#fff'
+      color: '#898989'
     },
     2: {
       // build
-      color: '#dddd0d'
+      color: '#FBDF5B'
     },
     3: {
       // repair
@@ -19,7 +19,10 @@ module.exports = function(ctx, config) {
     },
     10: {
       // home
-      color: 'green'
+      color: '#CACACA'
+    },
+    11: {
+      color: '#007100'
     }
   }
 
@@ -32,14 +35,24 @@ module.exports = function(ctx, config) {
     _homeMap.push(row)
 
   }
-  // add phonebox border
-  for (var k = 73; k < 80; k++) {
-    _homeMap[k][60] = 10
-    _homeMap[k][65] = 10
-  }
-  for (var l = 60; l < 66; l++) {
-    _homeMap[72][l] = 10
-  }
+
+  var phonebox = [
+    [10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
+    [10, 10, 10, 10, 11, 11, 11, 11, 11, 10],
+    [10, 10, 10, 11, 11, 11, 11, 11, 10, 10],
+    [10, 10, 11, 11, 10, 10, 11, 10, 10, 10],
+    [10, 11, 11, 10, 10, 10, 10, 10, 10, 10],
+    [10, 11, 11, 10, 10, 10, 10, 10, 10, 10],
+    [10, 11, 11, 11, 10, 10, 10, 10, 10, 10],
+    [10, 11, 11, 10, 10, 10, 10, 10, 10, 10],
+    [10, 11, 10, 10, 10, 10, 10, 10, 10, 10],
+    [10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
+  ]
+  phonebox.forEach(function(row, i) {
+    row.forEach(function(cell, j) {
+      _homeMap[70 + i][57 + j] = cell
+    })
+  })
 
   function _basicMap (width, height, emptyPercentage, flipped) {
     var entranceHeight = Math.floor(height / 5)

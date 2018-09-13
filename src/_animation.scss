@@ -1,0 +1,29 @@
+.ringing {
+  animation: flash 0.5s infinite;
+}
+
+@keyframes flash {
+  0% {background-color:#007100;}
+  50% {background-color:#FF4C00;}
+  100% {background-color:#007100;}
+}
+
+.injured {
+  animation: injure 0.5s;
+}
+
+@keyframes injure {
+  0% {box-shadow: none}
+  50% {box-shadow: 0 0 6px 2px #FF4C00}
+  100% {box-shadow: none}
+}
+
+.game-ringing {
+  animation: game-flash 0.5s infinite;
+}
+
+@keyframes game-flash {
+  0% {box-shadow: 0 0 5px 1px #007100}
+  50% {box-shadow: 0 0 5px 1px #FF4C00}
+  100% {box-shadow: 0 0 5px 1px #007100}
+}

@@ -39,7 +39,7 @@ module.exports = function (ctx, config, keys, gameState) {
     explosion.draw = function () {
       var tempLineWidth = ctx.lineWidth
       ctx.lineWidth = 3
-      ctx.strokeStyle='red';
+      ctx.strokeStyle='#FF4C00';
       ctx.beginPath()
       ctx.arc(
         explosion.posX,
@@ -70,7 +70,7 @@ module.exports = function (ctx, config, keys, gameState) {
       isnoise: true,
 
       draw: function () {
-        ctx.fillStyle = '#614433'
+        ctx.fillStyle = '#000'
         ctx.fillRect(
           noise.posX - noise.blockWidth / 2,
           noise.posY - noise.blockHeight / 2,

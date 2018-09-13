@@ -37,6 +37,7 @@ module.exports = function (config, keys, gameState, updateMap) {
           gameState.data.phoneRinging = false
           gameState.data.phoneCallTime = -10
           gameState.callIndicator.className = gameState.callIndicator.className.replace(' ringing', '')
+          gameState.dayNightContainer.className = gameState.dayNightContainer.className.replace(' game-ringing', '')
         }
       }
     },
